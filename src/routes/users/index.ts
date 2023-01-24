@@ -59,6 +59,12 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
           await fastify.db.users.change(user.id, { subscribedToUserIds: [...copyIds] });
         }
 
+        const relatedPosts = await fastify.db.posts.findMany({ key: 'userId', equals: id });
+
+        for (const post of relatedPosts) {
+          await fastify.db.posts.delete(post.id);
+        }
+
         return deletedUser;
       } catch {
         return reply.code(400).send({ message: 'Bad Request' });
