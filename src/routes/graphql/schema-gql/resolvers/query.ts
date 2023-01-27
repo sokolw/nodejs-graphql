@@ -1,11 +1,11 @@
-import { FastifyInstance } from 'fastify';
 import { MemberTypeEntity } from '../../../../utils/DB/entities/DBMemberTypes';
 import { PostEntity } from '../../../../utils/DB/entities/DBPosts';
 import { ProfileEntity } from '../../../../utils/DB/entities/DBProfiles';
 import { UserEntity } from '../../../../utils/DB/entities/DBUsers';
+import { ResolverContext } from '../types/commonTypes';
 
-export const getUsers = async (parent: unknown, args: unknown, contextValue: FastifyInstance) => {
-  const usersReq = await contextValue.inject({
+export const getUsers = async (parent: unknown, args: unknown, { fastify }: ResolverContext) => {
+  const usersReq = await fastify.inject({
     method: 'GET',
     url: '/users',
   });
@@ -13,9 +13,9 @@ export const getUsers = async (parent: unknown, args: unknown, contextValue: Fas
   return users;
 };
 
-export const getUser = async (parent: unknown, args: { id: string }, contextValue: FastifyInstance) => {
+export const getUser = async (parent: unknown, args: { id: string }, { fastify }: ResolverContext) => {
   const { id } = args;
-  const userReq = await contextValue.inject({
+  const userReq = await fastify.inject({
     method: 'GET',
     url: `/users/${id}`,
   });
@@ -26,17 +26,17 @@ export const getUser = async (parent: unknown, args: { id: string }, contextValu
   return null;
 };
 
-export const getPosts = async (parent: unknown, args: unknown, contextValue: FastifyInstance) => {
-  const postsReq = await contextValue.inject({
+export const getPosts = async (parent: unknown, args: unknown, { fastify }: ResolverContext) => {
+  const postsReq = await fastify.inject({
     method: 'GET',
     url: '/posts',
   });
   return postsReq.json<PostEntity[]>();
 };
 
-export const getPost = async (parent: unknown, args: { id: string }, contextValue: FastifyInstance) => {
+export const getPost = async (parent: unknown, args: { id: string }, { fastify }: ResolverContext) => {
   const { id } = args;
-  const postsReq = await contextValue.inject({
+  const postsReq = await fastify.inject({
     method: 'GET',
     url: `/posts/${id}`,
   });
@@ -48,8 +48,8 @@ export const getPost = async (parent: unknown, args: { id: string }, contextValu
   return null;
 };
 
-export const getProfiles = async (parent: unknown, args: unknown, contextValue: FastifyInstance) => {
-  const profilesReq = await contextValue.inject({
+export const getProfiles = async (parent: unknown, args: unknown, { fastify }: ResolverContext) => {
+  const profilesReq = await fastify.inject({
     method: 'GET',
     url: `/profiles`,
   });
@@ -57,9 +57,9 @@ export const getProfiles = async (parent: unknown, args: unknown, contextValue: 
   return profilesReq.json<ProfileEntity[]>();
 };
 
-export const getProfile = async (parent: unknown, args: { id: string }, contextValue: FastifyInstance) => {
+export const getProfile = async (parent: unknown, args: { id: string }, { fastify }: ResolverContext) => {
   const { id } = args;
-  const profileReq = await contextValue.inject({
+  const profileReq = await fastify.inject({
     method: 'GET',
     url: `/profiles/${id}`,
   });
@@ -71,8 +71,8 @@ export const getProfile = async (parent: unknown, args: { id: string }, contextV
   return null;
 };
 
-export const getMemberTypes = async (parent: unknown, args: unknown, contextValue: FastifyInstance) => {
-  const memberTypesReq = await contextValue.inject({
+export const getMemberTypes = async (parent: unknown, args: unknown, { fastify }: ResolverContext) => {
+  const memberTypesReq = await fastify.inject({
     method: 'GET',
     url: `/member-types`,
   });
@@ -80,9 +80,9 @@ export const getMemberTypes = async (parent: unknown, args: unknown, contextValu
   return memberTypesReq.json<MemberTypeEntity[]>();
 };
 
-export const getMemberType = async (parent: unknown, args: { id: string }, contextValue: FastifyInstance) => {
+export const getMemberType = async (parent: unknown, args: { id: string }, { fastify }: ResolverContext) => {
   const { id } = args;
-  const memberTypeReq = await contextValue.inject({
+  const memberTypeReq = await fastify.inject({
     method: 'GET',
     url: `/member-types/${id}`,
   });

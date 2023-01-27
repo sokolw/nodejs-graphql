@@ -1,15 +1,15 @@
-import { FastifyInstance } from 'fastify';
 import { MemberTypeEntity } from '../../../../utils/DB/entities/DBMemberTypes';
 import { PostEntity } from '../../../../utils/DB/entities/DBPosts';
 import { ProfileEntity } from '../../../../utils/DB/entities/DBProfiles';
 import { UserEntity } from '../../../../utils/DB/entities/DBUsers';
+import { ResolverContext } from '../types/commonTypes';
 
 export const createUser = async (
   parent: unknown,
   args: { input: Omit<UserEntity, 'id' | 'subscribedToUserIds'> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
-  const userReq = await contextValue.inject({
+  const userReq = await fastify.inject({
     method: 'POST',
     url: `/users`,
     payload: args.input,
@@ -25,9 +25,9 @@ export const createUser = async (
 export const createProfile = async (
   parent: unknown,
   args: { input: Omit<ProfileEntity, 'id'> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
-  const profileReq = await contextValue.inject({
+  const profileReq = await fastify.inject({
     method: 'POST',
     url: `/profiles`,
     payload: args.input,
@@ -43,9 +43,9 @@ export const createProfile = async (
 export const createPost = async (
   parent: unknown,
   args: { input: Omit<PostEntity, 'id'> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
-  const postReq = await contextValue.inject({
+  const postReq = await fastify.inject({
     method: 'POST',
     url: `/posts`,
     payload: args.input,
@@ -61,10 +61,10 @@ export const createPost = async (
 export const updateUser = async (
   parent: unknown,
   args: { id: string; input: Partial<Omit<UserEntity, 'id' | 'subscribedToUserIds'>> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
   const { id } = args;
-  const userReq = await contextValue.inject({
+  const userReq = await fastify.inject({
     method: 'PATCH',
     url: `/users/${id}`,
     payload: args.input,
@@ -79,10 +79,10 @@ export const updateUser = async (
 export const updateProfile = async (
   parent: unknown,
   args: { id: string; input: Partial<Omit<ProfileEntity, 'id' | 'userId'>> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
   const { id } = args;
-  const profileReq = await contextValue.inject({
+  const profileReq = await fastify.inject({
     method: 'PATCH',
     url: `/profiles/${id}`,
     payload: args.input,
@@ -97,10 +97,10 @@ export const updateProfile = async (
 export const updatePost = async (
   parent: unknown,
   args: { id: string; input: Partial<Omit<PostEntity, 'id' | 'userId'>> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
   const { id } = args;
-  const postReq = await contextValue.inject({
+  const postReq = await fastify.inject({
     method: 'PATCH',
     url: `/posts/${id}`,
     payload: args.input,
@@ -115,10 +115,10 @@ export const updatePost = async (
 export const updateMemberType = async (
   parent: unknown,
   args: { id: string; input: Partial<Omit<MemberTypeEntity, 'id'>> },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
   const { id } = args;
-  const postReq = await contextValue.inject({
+  const postReq = await fastify.inject({
     method: 'PATCH',
     url: `/member-types/${id}`,
     payload: args.input,
@@ -133,10 +133,10 @@ export const updateMemberType = async (
 export const subscribeTo = async (
   parent: unknown,
   args: { subscriberId: string; followId: string },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
   const { subscriberId, followId } = args;
-  const subscribeReq = await contextValue.inject({
+  const subscribeReq = await fastify.inject({
     method: 'POST',
     url: `/users/${subscriberId}/subscribeTo`,
     payload: { userId: followId },
@@ -151,10 +151,10 @@ export const subscribeTo = async (
 export const unsubscribeFrom = async (
   parent: unknown,
   args: { subscriberId: string; followId: string },
-  contextValue: FastifyInstance
+  { fastify }: ResolverContext
 ) => {
   const { subscriberId, followId } = args;
-  const subscribeReq = await contextValue.inject({
+  const subscribeReq = await fastify.inject({
     method: 'POST',
     url: `/users/${subscriberId}/unsubscribeFrom`,
     payload: { userId: followId },

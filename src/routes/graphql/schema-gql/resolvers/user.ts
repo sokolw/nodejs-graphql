@@ -1,11 +1,11 @@
-import { FastifyInstance } from 'fastify';
 import { MemberTypeEntity } from '../../../../utils/DB/entities/DBMemberTypes';
 import { PostEntity } from '../../../../utils/DB/entities/DBPosts';
 import { ProfileEntity } from '../../../../utils/DB/entities/DBProfiles';
 import { UserEntity } from '../../../../utils/DB/entities/DBUsers';
+import { ResolverContext } from '../types/commonTypes';
 
-export const getUserPosts = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const postsReq = await contextValue.inject({
+export const getUserPosts = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const postsReq = await fastify.inject({
     method: 'GET',
     url: '/posts',
   });
@@ -13,8 +13,8 @@ export const getUserPosts = async (parent: UserEntity, args: unknown, contextVal
   return posts.filter((post) => post.userId === parent.id);
 };
 
-export const getUserProfiles = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const profilesReq = await contextValue.inject({
+export const getUserProfiles = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const profilesReq = await fastify.inject({
     method: 'GET',
     url: `/profiles`,
   });
@@ -22,8 +22,8 @@ export const getUserProfiles = async (parent: UserEntity, args: unknown, context
   return profiles.filter((profile) => profile.userId === parent.id);
 };
 
-export const getUserProfile = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const profilesReq = await contextValue.inject({
+export const getUserProfile = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const profilesReq = await fastify.inject({
     method: 'GET',
     url: `/profiles`,
   });
@@ -31,14 +31,14 @@ export const getUserProfile = async (parent: UserEntity, args: unknown, contextV
   return profiles.find((profile) => profile.userId === parent.id) || null;
 };
 
-export const getUserMemberTypes = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const memberTypesReq = await contextValue.inject({
+export const getUserMemberTypes = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const memberTypesReq = await fastify.inject({
     method: 'GET',
     url: `/member-types`,
   });
   const memberTypes = memberTypesReq.json<MemberTypeEntity[]>();
 
-  const profilesReq = await contextValue.inject({
+  const profilesReq = await fastify.inject({
     method: 'GET',
     url: `/profiles`,
   });
@@ -48,14 +48,14 @@ export const getUserMemberTypes = async (parent: UserEntity, args: unknown, cont
   return memberTypes.filter((memberType) => memberType.id === (userProfile ? userProfile.memberTypeId : null));
 };
 
-export const getUserMemberType = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const memberTypesReq = await contextValue.inject({
+export const getUserMemberType = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const memberTypesReq = await fastify.inject({
     method: 'GET',
     url: `/member-types`,
   });
   const memberTypes = memberTypesReq.json<MemberTypeEntity[]>();
 
-  const profilesReq = await contextValue.inject({
+  const profilesReq = await fastify.inject({
     method: 'GET',
     url: `/profiles`,
   });
@@ -65,8 +65,8 @@ export const getUserMemberType = async (parent: UserEntity, args: unknown, conte
   return memberTypes.find((memberType) => memberType.id === (userProfile ? userProfile.memberTypeId : null)) || null;
 };
 
-export const getUserSubscribedTo = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const usersReq = await contextValue.inject({
+export const getUserSubscribedTo = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const usersReq = await fastify.inject({
     method: 'GET',
     url: '/users',
   });
@@ -75,8 +75,8 @@ export const getUserSubscribedTo = async (parent: UserEntity, args: unknown, con
   return users.filter((someUser) => someUser.subscribedToUserIds.includes(parent.id));
 };
 
-export const getSubscribedToUser = async (parent: UserEntity, args: unknown, contextValue: FastifyInstance) => {
-  const usersReq = await contextValue.inject({
+export const getSubscribedToUser = async (parent: UserEntity, args: unknown, { fastify }: ResolverContext) => {
+  const usersReq = await fastify.inject({
     method: 'GET',
     url: '/users',
   });
