@@ -1,4 +1,4 @@
-import { GraphQLObjectType, GraphQLNonNull, GraphQLList, GraphQLID } from 'graphql';
+import { GraphQLObjectType, GraphQLNonNull, GraphQLList, GraphQLID, GraphQLString } from 'graphql';
 import {
   getMemberType,
   getMemberTypes,
@@ -54,7 +54,7 @@ export const queryType = new GraphQLObjectType({
 
     memberType: {
       type: new GraphQLNonNull(memberTypeType),
-      args: { id: { type: new GraphQLNonNull(GraphQLID) } },
+      args: { id: { type: new GraphQLNonNull(GraphQLString) } },
       resolve: getMemberType,
     },
   },
