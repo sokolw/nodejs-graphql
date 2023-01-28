@@ -3,14 +3,11 @@ import { PostEntity } from '../../../../utils/DB/entities/DBPosts';
 import { ProfileEntity } from '../../../../utils/DB/entities/DBProfiles';
 import { UserEntity } from '../../../../utils/DB/entities/DBUsers';
 import { ResolverContext } from '../types/commonTypes';
+import { resolveValidationDepth } from './validation';
 
-export const getUsers = async (parent: unknown, args: unknown, { fastify }: ResolverContext) => {
-  const usersReq = await fastify.inject({
-    method: 'GET',
-    url: '/users',
-  });
-  const users = usersReq.json<UserEntity[]>();
-  return users;
+export const getUsers = async (parent: unknown, args: unknown, { dataLoader, validationDepth }: ResolverContext) => {
+  resolveValidationDepth(validationDepth);
+  return dataLoader.usersLoader.load('call');
 };
 
 export const getUser = async (parent: unknown, args: { id: string }, { fastify }: ResolverContext) => {
