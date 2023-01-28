@@ -37,8 +37,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     async function (request, reply): Promise<MemberTypeEntity> {
       const { id } = request.params;
       const partialMemberType = request.body;
-      return fastify.db.memberTypes.change(id, partialMemberType).catch(() => {
-        return reply.code(400).send({ message: 'Bad Request' });
+      return fastify.db.memberTypes.change(id, partialMemberType).catch((error) => {
+        return reply.code(400).send({ message: (error as Error).message || 'Bad Request' });
       });
     }
   );

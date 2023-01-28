@@ -92,7 +92,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         const user = await fastify.db.users.findOne({ key: 'id', equals: userId });
 
         if (subscriberUser && user) {
-          if (user.subscribedToUserIds.includes(subscriberId)) throw new Error();
+          if (user.subscribedToUserIds.includes(subscriberId)) throw new Error(`User already subscribed.`);
 
           const changedUser = await fastify.db.users.change(userId, {
             subscribedToUserIds: [...user.subscribedToUserIds, subscriberId],
@@ -102,8 +102,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         } else {
           throw new Error();
         }
-      } catch {
-        return reply.code(400).send({ message: 'Bad Request' });
+      } catch (error) {
+        return reply.code(400).send({ message: (error as Error).message || 'Invalid user ids.' });
       }
     }
   );
@@ -124,7 +124,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         const user = await fastify.db.users.findOne({ key: 'id', equals: userId });
 
         if (subscriberUser && user) {
-          if (!user.subscribedToUserIds.includes(subscriberId)) throw new Error();
+          if (!user.subscribedToUserIds.includes(subscriberId)) throw new Error('Not found subscriber for unsubscribe from follow.');
 
           const copyIds = [...user.subscribedToUserIds];
           const index = user.subscribedToUserIds.findIndex((item) => item === subscriberId);
@@ -136,8 +136,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         } else {
           throw new Error();
         }
-      } catch {
-        return reply.code(400).send({ message: 'Bad Request' });
+      } catch (error) {
+        return reply.code(400).send({ message: (error as Error).message || 'Invalid user ids.' });
       }
     }
   );

@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import { MemberTypeEntity } from '../../../../utils/DB/entities/DBMemberTypes';
 import { PostEntity } from '../../../../utils/DB/entities/DBPosts';
 import { ProfileEntity } from '../../../../utils/DB/entities/DBProfiles';
@@ -21,7 +22,7 @@ export const createUser = async (
     return userReq.json<UserEntity>();
   }
 
-  return null;
+  return new GraphQLError(userReq.json().message);
 };
 
 export const createProfile = async (
@@ -40,7 +41,7 @@ export const createProfile = async (
     return profileReq.json<ProfileEntity>();
   }
 
-  return null;
+  return new GraphQLError(profileReq.json().message);
 };
 
 export const createPost = async (
@@ -59,7 +60,7 @@ export const createPost = async (
     return postReq.json<PostEntity>();
   }
 
-  return null;
+  return new GraphQLError(postReq.json().message);
 };
 
 export const updateUser = async (
@@ -78,7 +79,7 @@ export const updateUser = async (
     return userReq.json<UserEntity>();
   }
 
-  return null;
+  return new GraphQLError(userReq.json().message);
 };
 
 export const updateProfile = async (
@@ -97,7 +98,7 @@ export const updateProfile = async (
     return profileReq.json<ProfileEntity>();
   }
 
-  return null;
+  return new GraphQLError(profileReq.json().message);
 };
 
 export const updatePost = async (
@@ -116,7 +117,7 @@ export const updatePost = async (
     return postReq.json<PostEntity>();
   }
 
-  return null;
+  return new GraphQLError(postReq.json().message);
 };
 
 export const updateMemberType = async (
@@ -126,16 +127,16 @@ export const updateMemberType = async (
 ) => {
   resolveValidationDepth(validationDepth);
   const { id } = args;
-  const postReq = await fastify.inject({
+  const memberTypeReq = await fastify.inject({
     method: 'PATCH',
     url: `/member-types/${id}`,
     payload: args.input,
   });
-  if (postReq.statusCode !== 404 && postReq.statusCode !== 400) {
-    return postReq.json<MemberTypeEntity>();
+  if (memberTypeReq.statusCode !== 404 && memberTypeReq.statusCode !== 400) {
+    return memberTypeReq.json<MemberTypeEntity>();
   }
 
-  return null;
+  return new GraphQLError(memberTypeReq.json().message);
 };
 
 export const subscribeTo = async (
@@ -153,8 +154,8 @@ export const subscribeTo = async (
   if (subscribeReq.statusCode !== 404 && subscribeReq.statusCode !== 400) {
     return subscribeReq.json<UserEntity>();
   }
-
-  return null;
+  
+  return new GraphQLError(subscribeReq.json().message);;
 };
 
 export const unsubscribeFrom = async (
@@ -173,5 +174,5 @@ export const unsubscribeFrom = async (
     return subscribeReq.json<UserEntity>();
   }
 
-  return null;
+  return new GraphQLError(subscribeReq.json().message);
 };

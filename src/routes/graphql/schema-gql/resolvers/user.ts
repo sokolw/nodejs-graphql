@@ -1,3 +1,4 @@
+import { GraphQLError } from 'graphql';
 import { UserEntity } from '../../../../utils/DB/entities/DBUsers';
 import { ResolverContext } from '../types/commonTypes';
 import { resolveValidationDepth } from './validation';
@@ -16,7 +17,7 @@ export const getUserProfile = async (parent: UserEntity, args: unknown, { dataLo
   resolveValidationDepth(validationDepth);
   const [profile] = await dataLoader.profilesLoader.load(parent.id);
 
-  return profile || null;
+  return profile || new GraphQLError(`User does not have a profile.`);
 };
 
 export const getUserMemberTypes = async (parent: UserEntity, args: unknown, { dataLoader, validationDepth }: ResolverContext) => {
@@ -31,7 +32,7 @@ export const getUserMemberType = async (parent: UserEntity, args: unknown, { dat
   const [profile] = await dataLoader.profilesLoader.load(parent.id);
   const [memberType] = await dataLoader.memberTypesLoader.load(profile ? profile.memberTypeId : '');
 
-  return memberType || null;
+  return memberType || new GraphQLError(`User does not have a profile with memberType`);
 };
 
 export const getUserSubscribedTo = async (parent: UserEntity, args: unknown, { dataLoader, validationDepth }: ResolverContext) => {

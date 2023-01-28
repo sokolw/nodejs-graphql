@@ -39,11 +39,11 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       try {
         const userPost = request.body;
         const user = await fastify.db.users.findOne({ key: 'id', equals: userPost.userId });
-        if (!user) throw new Error();
+        if (!user) throw new Error(`Such user does not exist`);
 
         return fastify.db.posts.create(userPost);
-      } catch {
-        return reply.code(404).send({ message: 'Not Found' });
+      } catch (error) {
+        return reply.code(404).send({ message: (error as Error).message || 'Not Found' });
       }
     }
   );
@@ -74,8 +74,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     async function (request, reply): Promise<PostEntity> {
       const { id } = request.params;
       const partialPost = request.body;
-      return fastify.db.posts.change(id, partialPost).catch(() => {
-        return reply.code(400).send({ message: 'Bad Request' });
+      return fastify.db.posts.change(id, partialPost).catch((error) => {
+        return reply.code(400).send({ message: (error as Error).message || 'Bad Request' });
       });
     }
   );

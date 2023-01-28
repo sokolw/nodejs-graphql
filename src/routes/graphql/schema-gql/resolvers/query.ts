@@ -4,6 +4,7 @@ import { ProfileEntity } from '../../../../utils/DB/entities/DBProfiles';
 import { UserEntity } from '../../../../utils/DB/entities/DBUsers';
 import { ResolverContext } from '../types/commonTypes';
 import { resolveValidationDepth } from './validation';
+import { GraphQLError } from 'graphql';
 
 export const getUsers = async (parent: unknown, args: unknown, { dataLoader, validationDepth }: ResolverContext) => {
   resolveValidationDepth(validationDepth);
@@ -21,7 +22,7 @@ export const getUser = async (parent: unknown, args: { id: string }, { fastify, 
     return userReq.json<UserEntity[]>();
   }
 
-  return null;
+  return new GraphQLError('User is not exist.');
 };
 
 export const getPosts = async (parent: unknown, args: unknown, { fastify, validationDepth }: ResolverContext) => {
@@ -45,7 +46,7 @@ export const getPost = async (parent: unknown, args: { id: string }, { fastify, 
     return postsReq.json<UserEntity>();
   }
 
-  return null;
+  return new GraphQLError('Post is not exist.');
 };
 
 export const getProfiles = async (parent: unknown, args: unknown, { fastify, validationDepth }: ResolverContext) => {
@@ -70,7 +71,7 @@ export const getProfile = async (parent: unknown, args: { id: string }, { fastif
     return profileReq.json<ProfileEntity>();
   }
 
-  return null;
+  return new GraphQLError('Profile is not exist.');
 };
 
 export const getMemberTypes = async (parent: unknown, args: unknown, { fastify, validationDepth }: ResolverContext) => {
@@ -95,5 +96,5 @@ export const getMemberType = async (parent: unknown, args: { id: string }, { fas
     return memberTypeReq.json<MemberTypeEntity>();
   }
 
-  return null;
+  return new GraphQLError(`MemberType ${id} is not exist.`);
 };

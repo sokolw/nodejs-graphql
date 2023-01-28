@@ -39,11 +39,13 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
         const user = await fastify.db.users.findOne({ key: 'id', equals: userProfile.userId });
         const memberType = await fastify.db.memberTypes.findOne({ key: 'id', equals: userProfile.memberTypeId });
         const existUserProfile = await fastify.db.profiles.findOne({ key: 'userId', equals: userProfile.userId });
-        if (!user || !memberType || existUserProfile) throw new Error();
+        if (!user) throw new Error(`Such user does not exist.`);
+        if (!memberType) throw new Error(`Such memberType does not exist.`);
+        if (existUserProfile) throw new Error(`The user already has a profile.`);
 
         return fastify.db.profiles.create(userProfile);
-      } catch {
-        return reply.code(400).send({ message: 'Bad Request' });
+      } catch (error) {
+        return reply.code(400).send({ message: (error as Error).message || 'Bad Request' });
       }
     }
   );
@@ -78,12 +80,12 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
 
         if (partialProfile.memberTypeId) {
           const memberType = await fastify.db.memberTypes.findOne({ key: 'id', equals: partialProfile.memberTypeId });
-          if (!memberType) throw new Error();
+          if (!memberType) throw new Error(`Such memberType does not exist.`);
         }
 
         return await fastify.db.profiles.change(id, partialProfile);
-      } catch {
-        return reply.code(400).send({ message: 'Bad Request' });
+      } catch (error) {
+        return reply.code(400).send({ message: (error as Error).message || 'Bad Request' });
       }
     }
   );
