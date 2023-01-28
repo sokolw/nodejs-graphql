@@ -10,6 +10,8 @@ import { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
 import { MemberTypeEntity } from '../../utils/DB/entities/DBMemberTypes';
 import { UserEntity } from '../../utils/DB/entities/DBUsers';
 
+const DEFAULT_DEPTH_LIMIT = 6;
+
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> => {
   fastify.post(
     '/',
@@ -19,23 +21,17 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply) {
-      const gqlRequest = request.body;
-
+      const gqlRequest = request.body!;
       console.log(gqlRequest);
-      // const isValid = validate(schema, parse(gqlRequest.query!), [depthLimit(10)]);
-      // console.dir('validation');
-      // console.dir(isValid);
-      // if (isValid.length > 0) {
-      //   const [error] = isValid;
-      //   throw error;
-      // }
-      if (gqlRequest.query) {
+      if (gqlRequest.query || gqlRequest.mutation) {
         return graphql({
           schema: gqlSchema,
-          source: gqlRequest.query,
+          source: (gqlRequest.query || gqlRequest.mutation)!,
           contextValue: {
             fastify,
-            validationDepth: validate(gqlSchema, parse(gqlRequest.query), [depthLimit(1)]),
+            validationDepth: validate(gqlSchema, parse((gqlRequest.query || gqlRequest.mutation)!), [
+              depthLimit(DEFAULT_DEPTH_LIMIT),
+            ]),
             dataLoader: {
               postsLoader: new DataLoader(async (ids: readonly string[]) => {
                 const postsReq = await fastify.inject({
@@ -81,14 +77,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
           variableValues: gqlRequest.variables,
         });
       }
-      // { query: 'mutation {\r\n    setMessage(message: "some msg")\r\n}' }
-      // if (gqlRequest.mutation) {
-      //   return graphql({
-      //     schema,
-      //     source: gqlRequest.mutation,
-      //     contextValue: fastify,
-      //   });
-      // }
     }
   );
 };
