@@ -13,6 +13,7 @@
     - 1.2 запускаем тесты `npm run test`.
 2. реализация graphql конечной точки:
     - все запросы делаются через: method: `POST`, url: `/graphql`
+    - для удобства можно использовать [GraphQL Playground for Chrome](https://chrome.google.com/webstore/detail/graphql-playground-for-ch/kjhjcgclphafojaeeickcokfbhlegecd). Т.к. при ручном написании запросов можно допустить ошибку.
     - 2.1 получаем users, profiles, posts, memberTypes в одном запросе, если в каком-то из полей не будет данных то вернется пустой массив.
       - JSON запрос:
       ```json
