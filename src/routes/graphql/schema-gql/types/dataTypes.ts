@@ -60,7 +60,7 @@ export const userType: GraphQLObjectType = new GraphQLObjectType({
       resolve: getUserProfiles,
     },
     profile: {
-      type: new GraphQLNonNull(profileType),
+      type: profileType,
       resolve: getUserProfile,
     },
     memberTypes: {
@@ -68,7 +68,7 @@ export const userType: GraphQLObjectType = new GraphQLObjectType({
       resolve: getUserMemberTypes,
     },
     memberType: {
-      type: new GraphQLNonNull(memberTypeType),
+      type: memberTypeType,
       resolve: getUserMemberType,
     },
     userSubscribedTo: {
