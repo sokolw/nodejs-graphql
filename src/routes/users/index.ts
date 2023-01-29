@@ -93,6 +93,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
 
         if (subscriberUser && user) {
           if (user.subscribedToUserIds.includes(subscriberId)) throw new Error(`User already subscribed.`);
+          if (subscriberId === userId) throw new Error(`You can't subscribe to yourself.`);
 
           const changedUser = await fastify.db.users.change(userId, {
             subscribedToUserIds: [...user.subscribedToUserIds, subscriberId],
