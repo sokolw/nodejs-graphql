@@ -611,14 +611,12 @@
       ```
 3. `n+1` graphql problem с использованием [dataloader](https://www.npmjs.com/package/dataloader)
     - подключение загрузчиков в graphql контекст:
-      - [code](...)
+      - [code](https://github.com/sokolw/nodejs-graphql/blob/4f1d922b3d29e0e43feea48bdaec992a6d4f90c5/src/routes/graphql/index.ts#L31)
     - использование загрузчиков в graphql resolver:
-      - [code](...)
-      - [code](...)
-      - [code](...)
-      - [code](...)
+      - [code](https://github.com/sokolw/nodejs-graphql/blob/dev/src/routes/graphql/schema-gql/resolvers/user.ts)
+      - [code](https://github.com/sokolw/nodejs-graphql/blob/4f1d922b3d29e0e43feea48bdaec992a6d4f90c5/src/routes/graphql/schema-gql/resolvers/query.ts#L11)
     - файл с загрузчиками:
-      - [code](...)
+      - [code](https://github.com/sokolw/nodejs-graphql/blob/dev/src/routes/graphql/data-loaders.ts)
 4. ограничение вложенности запроса с использованием [graphql-depth-limit](https://www.npmjs.com/package/graphql-depth-limit)
     - по умолчанию вложенность до 6 уровней.
-    - место его использования в коде: [code](...)
+    - место его использования в коде: [code](https://github.com/sokolw/nodejs-graphql/blob/4f1d922b3d29e0e43feea48bdaec992a6d4f90c5/src/routes/graphql/index.ts#L29)
