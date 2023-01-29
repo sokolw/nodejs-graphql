@@ -33,6 +33,9 @@ const customFetch = async (
         });
       }
     );
+    req.on('error', () => {
+      reject(new Error('Try again when the server starts!'));
+    });
     req.write(stringJson);
     req.end();
   });
@@ -133,43 +136,47 @@ const createdUsers: UserPartial[] = [];
 const createdProfiles: { id: string }[] = [];
 
 const createMocks = async () => {
-  for (const user of users) {
-    const userRes = await customFetch(`${HOST}/users`, {
-      body: user,
-      method: 'POST',
-    });
-    createdUsers.push(userRes as UserPartial);
-  }
+  try {
+    for (const user of users) {
+      const userRes = await customFetch(`${HOST}/users`, {
+        body: user,
+        method: 'POST',
+      });
+      createdUsers.push(userRes as UserPartial);
+    }
 
-  for (let i = 0; i < profiles.length; i++) {
-    profiles[i].userId = createdUsers[i].id;
-    const profileRes = await customFetch(`${HOST}/profiles`, {
-      body: profiles[i],
-      method: 'POST',
-    });
-    createdProfiles.push(profileRes as { id: string });
-  }
+    for (let i = 0; i < profiles.length; i++) {
+      profiles[i].userId = createdUsers[i].id;
+      const profileRes = await customFetch(`${HOST}/profiles`, {
+        body: profiles[i],
+        method: 'POST',
+      });
+      createdProfiles.push(profileRes as { id: string });
+    }
 
-  for (const user of createdUsers) {
-    const randomCountPosts = Math.floor(Math.random() * 2) + 1;
-    for (let index = 0; index < randomCountPosts; index++) {
-      await customFetch(`${HOST}/posts`, {
-        body: postTemplate(user.id, user.firstName),
+    for (const user of createdUsers) {
+      const randomCountPosts = Math.floor(Math.random() * 2) + 1;
+      for (let index = 0; index < randomCountPosts; index++) {
+        await customFetch(`${HOST}/posts`, {
+          body: postTemplate(user.id, user.firstName),
+          method: 'POST',
+        });
+      }
+    }
+
+    //all subscribeTo superStar
+    const superStar = createdUsers[0];
+    for (const user of createdUsers) {
+      await customFetch(`${HOST}/users/${user.id}/subscribeTo`, {
+        body: { userId: superStar.id },
         method: 'POST',
       });
     }
-  }
 
-  //all subscribeTo superStar
-  const superStar = createdUsers[0];
-  for (const user of createdUsers) {
-    await customFetch(`${HOST}/users/${user.id}/subscribeTo`, {
-      body: { userId: superStar.id },
-      method: 'POST',
-    });
+    console.log('\x1b[32m%s\x1b[0m', 'Mocks created! Have fun!');
+  } catch (error) {
+    console.log('\x1b[31m%s\x1b[0m', `${(error as Error).message}`);
   }
-
-  console.log('Mocks created! Have fun!');
 };
 
 createMocks();
