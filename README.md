@@ -400,7 +400,9 @@
         }
       }
       ```
-    - 2.11 изменить user. При изменении user не все поля обязательны.
+    - 2.11 InputObjectType for DTOs.
+      - [code](https://github.com/sokolw/nodejs-graphql/blob/dev/src/routes/graphql/schema-gql/types/inputTypes.ts)
+    - 2.12 изменить user. При изменении user не все поля обязательны.
       - JSON запрос:
       ```json
       {
@@ -437,7 +439,7 @@
         }
       }
       ```
-    - 2.12 изменить profile. При изменении profile не все поля обязательны. При неверном указании memberTypeId для его изменения вернется ошибка.
+    - 2.13 изменить profile. При изменении profile не все поля обязательны. При неверном указании memberTypeId для его изменения вернется ошибка.
       - JSON запрос:
       ```json
       {
@@ -483,7 +485,7 @@
         }
       }
       ```
-    - 2.13 изменить post. При изменении post не все поля обязательны.
+    - 2.14 изменить post. При изменении post не все поля обязательны.
       - JSON запрос:
       ```json
       {
@@ -517,7 +519,7 @@
         }
       }
       ```
-    - 2.14 изменить memberType. При изменении memberType не все поля обязательны.
+    - 2.15 изменить memberType. При изменении memberType не все поля обязательны.
       - JSON запрос:
       ```json
       {
@@ -551,7 +553,7 @@
         }
       }
       ```
-    - 2.15 подписаться на пользователя. `subscriberUserId` - подпищик,  `followUserId` - отслеживаемый пользователь.
+    - 2.16/a подписаться на пользователя. `subscriberUserId` - подпищик,  `followUserId` - отслеживаемый пользователь.
       - JSON запрос:
       ```json
       {
@@ -580,7 +582,7 @@
         "followUserId": "8df391fc-dd2e-432c-91d1-00fbe7599000"
       }
       ```
-    - 2.16 отписаться от пользователя.
+    - 2.16/b отписаться от пользователя.
       - JSON запрос:
       ```json
       {
@@ -609,6 +611,8 @@
         "followUserId": "e886f441-0811-45b5-b24c-6cac003c96b6"
       }
       ```
+    - 2.17 InputObjectType for DTOs.
+      - [code](https://github.com/sokolw/nodejs-graphql/blob/dev/src/routes/graphql/schema-gql/types/inputTypes.ts)
 3. `n+1` graphql problem с использованием [dataloader](https://www.npmjs.com/package/dataloader)
     - подключение загрузчиков в graphql контекст:
       - [code](https://github.com/sokolw/nodejs-graphql/blob/4f1d922b3d29e0e43feea48bdaec992a6d4f90c5/src/routes/graphql/index.ts#L31)
