@@ -16,7 +16,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<MemberTypeEntity> {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       return fastify.db.memberTypes.findOne({ key: 'id', equals: id }).then((item) => {
         if (!item) {
           return reply.code(404).send({ message: 'Not Found' });
@@ -35,8 +35,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<MemberTypeEntity> {
-      const { id } = request.params;
-      const partialMemberType = request.body;
+      const { id } = request.params as { id: string };
+      const partialMemberType = request.body as Partial<Omit<MemberTypeEntity, 'id'>>;
       return fastify.db.memberTypes.change(id, partialMemberType).catch((error) => {
         return reply.code(400).send({ message: (error as Error).message || 'Bad Request' });
       });

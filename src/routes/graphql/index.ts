@@ -8,6 +8,14 @@ import { connectDataLoaders } from './data-loaders';
 
 const DEFAULT_DEPTH_LIMIT = 6;
 
+type gqlRequestType = {
+  body: {
+    query?: string;
+    mutation?: string;
+    variables?: { [variable: string]: unknown };
+  };
+};
+
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> => {
   fastify.post(
     '/',
@@ -17,7 +25,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply) {
-      const { body: gqlRequest } = request;
+      const { body: gqlRequest }  = request as gqlRequestType;
       if (gqlRequest.query || gqlRequest.mutation) {
         return graphql({
           schema: gqlSchema,

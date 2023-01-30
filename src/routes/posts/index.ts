@@ -18,7 +18,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<PostEntity> {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       return fastify.db.posts.findOne({ key: 'id', equals: id }).then((item) => {
         if (!item) {
           return reply.code(404).send({ message: 'Not Found' });
@@ -37,7 +37,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply): Promise<PostEntity> {
       try {
-        const userPost = request.body;
+        const userPost = request.body as Omit<PostEntity, 'id'>;
         const user = await fastify.db.users.findOne({ key: 'id', equals: userPost.userId });
         if (!user) throw new Error(`Such user does not exist`);
 
@@ -56,7 +56,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<PostEntity> {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       return fastify.db.posts.delete(id).catch(() => {
         return reply.code(400).send({ message: 'Bad Request' });
       });
@@ -72,8 +72,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<PostEntity> {
-      const { id } = request.params;
-      const partialPost = request.body;
+      const { id } = request.params as { id: string };
+      const partialPost = request.body as Partial<Omit<PostEntity, 'id' | 'userId'>>;
       return fastify.db.posts.change(id, partialPost).catch((error) => {
         return reply.code(400).send({ message: (error as Error).message || 'Bad Request' });
       });

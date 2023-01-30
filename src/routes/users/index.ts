@@ -16,7 +16,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<UserEntity> {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       return fastify.db.users.findOne({ key: 'id', equals: id }).then((item) => {
         if (!item) {
           return reply.code(404).send({ message: 'Not Found' });
@@ -34,7 +34,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<UserEntity> {
-      return fastify.db.users.create(request.body);
+      return fastify.db.users.create(request.body as Omit<UserEntity, 'id' | 'subscribedToUserIds'>);
     }
   );
 
@@ -47,7 +47,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply): Promise<UserEntity> {
       try {
-        const { id } = request.params;
+        const { id } = request.params as { id: string };
         const deletedUser = await fastify.db.users.delete(id);
         const relatedUsers = await fastify.db.users.findMany({ key: 'subscribedToUserIds', inArray: id });
 
@@ -86,8 +86,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply): Promise<UserEntity> {
       try {
-        const { id: subscriberId } = request.params;
-        const { userId } = request.body;
+        const { id: subscriberId } = request.params as { id: string };
+        const { userId } = request.body as { userId: string };
         const subscriberUser = await fastify.db.users.findOne({ key: 'id', equals: subscriberId });
         const user = await fastify.db.users.findOne({ key: 'id', equals: userId });
 
@@ -119,8 +119,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply): Promise<UserEntity> {
       try {
-        const { id: subscriberId } = request.params;
-        const { userId } = request.body;
+        const { id: subscriberId } = request.params as { id: string };
+        const { userId } = request.body as { userId: string };
         const subscriberUser = await fastify.db.users.findOne({ key: 'id', equals: subscriberId });
         const user = await fastify.db.users.findOne({ key: 'id', equals: userId });
 
@@ -152,8 +152,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<UserEntity> {
-      const { id } = request.params;
-      const partialUser = request.body;
+      const { id } = request.params as { id: string };
+      const partialUser = request.body as Partial<Omit<UserEntity, 'id'>>;
       return fastify.db.users.change(id, partialUser).catch(() => {
         return reply.code(400).send({ message: 'Bad Request' });
       });

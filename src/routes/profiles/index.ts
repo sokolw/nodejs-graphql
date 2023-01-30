@@ -16,7 +16,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<ProfileEntity> {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       return fastify.db.profiles.findOne({ key: 'id', equals: id }).then((item) => {
         if (!item) {
           return reply.code(404).send({ message: 'Not Found' });
@@ -35,7 +35,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply): Promise<ProfileEntity> {
       try {
-        const userProfile = request.body;
+        const userProfile = request.body as Omit<ProfileEntity, 'id'>;
         const user = await fastify.db.users.findOne({ key: 'id', equals: userProfile.userId });
         const memberType = await fastify.db.memberTypes.findOne({ key: 'id', equals: userProfile.memberTypeId });
         const existUserProfile = await fastify.db.profiles.findOne({ key: 'userId', equals: userProfile.userId });
@@ -58,7 +58,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
       },
     },
     async function (request, reply): Promise<ProfileEntity> {
-      const { id } = request.params;
+      const { id } = request.params as { id: string };
       return fastify.db.profiles.delete(id).catch(() => {
         return reply.code(400).send({ message: 'Bad Request' });
       });
@@ -75,8 +75,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (fastify): Promise<void> 
     },
     async function (request, reply): Promise<ProfileEntity> {
       try {
-        const { id } = request.params;
-        const partialProfile = request.body;
+        const { id } = request.params as { id: string };
+        const partialProfile = request.body as Partial<Omit<ProfileEntity, 'id' | 'userId'>>;
 
         if (partialProfile.memberTypeId) {
           const memberType = await fastify.db.memberTypes.findOne({ key: 'id', equals: partialProfile.memberTypeId });
